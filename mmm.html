@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DevianTarot | Курс «Миры Мило Манары»</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Roboto:wght@400;500;700&family=Host+Grotesk:wght@400;500;700;900&family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --text-primary: #EAEFEA;
+        --text-secondary: #A8B0A9;
+        --accent: #B4D8C4;
+        --bg-main: #0A0A0A;
+      }
+      
+      body { 
+        font-family: 'Roboto', sans-serif; 
+        background-color: var(--bg-main); 
+        color: var(--text-primary); 
+        line-height: 1.6; 
+      }
+      
+      .font-host { font-family: 'Host Grotesk', sans-serif; }
+      .font-jost { font-family: 'Jost', sans-serif; }
+      .font-futura { font-family: 'Futura', 'Jost', sans-serif; }
+      .font-garamond { font-family: 'EB Garamond', serif; }
+
+      .background-glow {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        overflow: hidden;
+        pointer-events: none;
+      }
+      .background-glow::after {
+        content: '';
+        position: absolute;
+        width: 1600px;
+        height: 1600px;
+        background: radial-gradient(50% 50% at 50% 50%, rgba(180, 216, 196, 1) 0%, rgba(166, 254, 182, 0.5) 25%, rgba(166, 254, 182, 0.15) 50%, rgba(166, 254, 182, 0) 75%);
+        border-radius: 50%;
+        opacity: 0.12;
+        bottom: -750px;
+        right: -750px;
+      }
+
+      #noise-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+        z-index: 9999;
+        overflow: hidden;
+      }
+      #noise-overlay::before {
+        content: '';
+        position: absolute;
+        top: -100%;
+        left: -100%;
+        width: 300%;
+        height: 300%;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        background-repeat: repeat;
+        background-size: 256px 256px;
+        opacity: 0.22;
+        animation: noise-jitter 0.2s infinite steps(2);
+        will-change: transform;
+        backface-visibility: hidden;
+      }
+
+      @keyframes noise-jitter {
+        0% { transform: translate(0, 0); }
+        10% { transform: translate(-1%, -1%); }
+        20% { transform: translate(-2%, 1%); }
+        30% { transform: translate(1%, -2%); }
+        40% { transform: translate(-1%, 3%); }
+        50% { transform: translate(-2%, 1%); }
+        60% { transform: translate(3%, 0); }
+        70% { transform: translate(0, 2%); }
+        80% { transform: translate(-3%, 0); }
+        90% { transform: translate(2%, 1%); }
+        100% { transform: translate(1%, 0); }
+      }
+      
+      .prose-custom { color: var(--text-secondary); }
+      .prose-custom h1 { color: var(--text-primary); }
+      .prose-custom strong { color: inherit; font-weight: 700; }
+      
+      .education-plate {
+        background-color: rgba(255, 255, 255, 0.05);
+        padding: 0.6rem 1rem;
+        border-radius: 0.75rem;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: 80px;
+      }
+
+      .education-plate:hover {
+        background-color: rgba(255, 255, 255, 0.08);
+        transform: translateY(-2px);
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+      }
+      .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Mobile Menu Fix */
+      #mobile-menu {
+        transform: translateX(100%);
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      #mobile-menu.active {
+        transform: translateX(0);
+      }
+    </style>
+  </head>
+  <body class="bg-[#0A0A0A] text-[#EAEFEA] font-sans overflow-x-hidden">
+    <div class="background-glow"></div>
+    <div id="noise-overlay"></div>
+    <nav id="navbar" class="fixed top-0 left-0 w-full z-[100] px-6 py-4 transition-all bg-black/30 backdrop-blur-md">
+      <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <a href="standalone" class="flex items-center gap-3 group">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-8 h-8">
+            <g>
+              <polygon fill="#B4D8C4" points="506.95 147.08 506.95 192.36 404.15 192.36 404.15 480.26 358.83 480.26 358.83 147.08 506.95 147.08"/>
+              <rect fill="#B4D8C4" x="358.83" y="34.89" width="147.44" height="45.28"/>
+            </g>
+            <path fill="#B4D8C4" d="M7.82,34.22h282.03v446.04H7.82V34.22ZM53.14,439.03c54.23.89,112.01-11.39,149.48-53.03,52.76-58.64,55.38-175.73,12.43-240.21-36.07-54.15-99.33-71.81-161.92-70.34v363.59Z"/>
+          </svg>
+          <span class="font-futura text-xl font-semibold tracking-wider text-[#B4D8C4] group-hover:opacity-80 transition-opacity">DEVIANTAROT</span></a>
+        
+        <div class="hidden md:flex items-center gap-8">
+          <a href="standalone#about" class="text-xs text-[#A8B0A9] hover:text-[#EAEFEA] transition-colors uppercase font-bold tracking-[0.2em]">Об авторе</a>
+          <a href="standalone#video" class="text-xs text-[#A8B0A9] hover:text-[#EAEFEA] transition-colors uppercase font-bold tracking-[0.2em]">Видео</a>
+          <a href="standalone#courses" class="text-xs text-[#A8B0A9] hover:text-[#EAEFEA] transition-colors uppercase font-bold tracking-[0.2em]">Курсы</a>
+          <a href="standalone#sessions" class="text-xs text-[#A8B0A9] hover:text-[#EAEFEA] transition-colors uppercase font-bold tracking-[0.2em]">Услуги</a>
+          <a href="standalone#articles" class="text-xs text-[#A8B0A9] hover:text-[#EAEFEA] transition-colors uppercase font-bold tracking-[0.2em]">Статьи</a>
+          <a href="standalone#contact" class="text-xs text-[#A8B0A9] hover:text-[#EAEFEA] transition-colors uppercase font-bold tracking-[0.2em]">Контакты</a>
+        </div>
+
+        <button id="menu-toggle" class="md:hidden relative z-[110] p-2 text-[#B4D8C4]" >
+          <div class="space-y-1.5 w-6">
+            <span class="block h-0.5 bg-current transition-all origin-center"   id="line1"></span>
+            <span class="block h-0.5 bg-current transition-all"  id="line2"></span>
+            <span class="block h-0.5 bg-current transition-all origin-center"   id="line3"></span>
+          </div>
+        </button>
+      </div>
+
+      <!-- Mobile Menu Content -->
+      <div id="mobile-menu" class="fixed top-0 right-0 w-[80%] h-screen bg-[#0A0A0A] z-[105] shadow-2xl flex flex-col p-12 gap-8" >
+        <div class="mt-12 space-y-8">
+          <a href="standalone#about" class="text-3xl font-host font-medium text-[#EAEFEA] mobile-link block hover:text-[#B4D8C4]" >Об авторе</a>
+          <a href="standalone#video" class="text-3xl font-host font-medium text-[#EAEFEA] mobile-link block hover:text-[#B4D8C4]" >Видео</a>
+          <a href="standalone#courses" class="text-3xl font-host font-medium text-[#EAEFEA] mobile-link block hover:text-[#B4D8C4]" >Курсы</a>
+          <a href="standalone#sessions" class="text-3xl font-host font-medium text-[#EAEFEA] mobile-link block hover:text-[#B4D8C4]" >Услуги</a>
+          <a href="standalone#articles" class="text-3xl font-host font-medium text-[#EAEFEA] mobile-link block hover:text-[#B4D8C4]" >Статьи</a>
+          <a href="standalone#contact" class="text-3xl font-host font-medium text-[#EAEFEA] mobile-link block hover:text-[#B4D8C4]" >Контакты</a>
+        </div>
+      </div>
+      <div id="menu-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[101] transition-opacity hidden opacity-0"    tabindex="0"  ></div>
+    </nav>
+    <main>
+        <header id="hero" class="relative h-[80vh] flex items-center justify-center overflow-hidden z-10">
+      <div class="absolute inset-0 z-0 scale-105">
+        <img src="img/mmm/mmm.jpg" alt="Миры Мило Манары" class="w-full h-full object-cover object-center" onerror="this.src='img/mmm/mmm.jpg'" referrerpolicy="no-referrer">
+      </div>
+    </header>
+
+      <div class="max-w-4xl mx-auto prose-custom px-6 md:px-12 pt-12 text-sm md:text-base leading-relaxed text-[#A8B0A9]">
+        <section class="reveal">
+          <div class="space-y-6">
+            <p>Ни для кого не секрет, что тема отношений (проблемы и перспективы их развития, а также их отсутствия) является самой популярной для запросов клиентов к тарологу.</p>
+            <h2 class="text-3xl md:text-5xl font-host font-medium text-[#EAEFEA] leading-tight mt-12 mb-8">Для того, чтобы…</h2>
+          </div>
+        </section>
+      </div>
+
+      <div class="max-w-4xl mx-auto prose-custom px-6 md:px-12 pt-12 pb-32 space-y-16 md:space-y-24 text-sm md:text-base leading-relaxed text-[#A8B0A9]">
+        
+        <section class="reveal">
+          <div class="grid grid-cols-2 lg:grid-cols-2 gap-4 md:gap-6">
+            <div class="education-plate p-4 md:p-6 min-h-[120px]">
+              <div class="relative z-10">
+                <h4 class="text-[#EAEFEA] font-normal text-sm md:text-base leading-tight">стать <b>востребованным тарологом в сфере человеческих отношений</b> и не иметь отбоя от клиентов и их денежек</h4>
+              </div>
+              <span class="absolute -right-2 -bottom-2 text-7xl opacity-[0.07] pointer-events-none select-none grayscale group-hover:opacity-10 transition-opacity">💼</span>
+            </div>
+
+            <div class="education-plate p-4 md:p-6 min-h-[120px]">
+              <div class="relative z-10">
+                <h4 class="text-[#EAEFEA] font-normal text-sm md:text-base leading-tight">научится «с нуля» делать <b>тонкие, психологические расклады</b> без излишней «шизотерики»</h4>
+              </div>
+              <span class="absolute -right-2 -bottom-2 text-7xl opacity-[0.07] pointer-events-none select-none grayscale group-hover:opacity-10 transition-opacity">🧠</span>
+            </div>
+
+            <div class="education-plate p-4 md:p-6 min-h-[120px]">
+              <div class="relative z-10">
+                <h4 class="text-[#EAEFEA] font-normal text-sm md:text-base leading-tight"><b>наладить контакт с «самим собой»</b> и получить невероятную дозу любви к себе и понимания вопросов человеческой сексуальности</h4>
+              </div>
+              <span class="absolute -right-2 -bottom-2 text-7xl opacity-[0.07] pointer-events-none select-none grayscale group-hover:opacity-10 transition-opacity">❤️</span>
+            </div>
+
+            <div class="education-plate p-4 md:p-6 min-h-[120px]">
+              <div class="relative z-10">
+                <h4 class="text-[#EAEFEA] font-normal text-sm md:text-base leading-tight">понять как <b>легко и просто достигать желаемой цели в общении</b> с другими людьми</h4>
+              </div>
+              <span class="absolute -right-2 -bottom-2 text-7xl opacity-[0.07] pointer-events-none select-none grayscale group-hover:opacity-10 transition-opacity">🤝</span>
+            </div>
+
+            <div class="education-plate p-4 md:p-6 min-h-[120px] col-span-2">
+              <div class="relative z-10">
+                <h4 class="text-[#EAEFEA] font-normal text-sm md:text-base leading-tight text-center">ищете уникальный инструмент, который поможет Вам <b>узнать самого себя</b> и окружающих и <b>найти путь решения глубинных проблем</b>…</h4>
+              </div>
+              <span class="absolute -right-2 -bottom-2 text-7xl opacity-[0.07] pointer-events-none select-none grayscale group-hover:opacity-10 transition-opacity">🔍</span>
+            </div>
+          </div>
+          <p class="mt-12 text-center text-[#EAEFEA] text-lg md:text-xl leading-tight opacity-90">необходимо пройти всего лишь один курс!</p>
+        </section>
+
+        <section class="reveal">
+          <h2 class="text-4xl md:text-5xl font-host font-medium text-[#EAEFEA] mb-2 leading-tight">О курсе</h2>
+          <div class="my-8 -mx-6 md:mx-auto md:max-w-2xl">
+            <img src="img/mmm/mmm.jpg" alt="О курсе" class="w-full aspect-square object-cover rounded-none md:rounded-2xl" onerror="this.src='img/mmm/mmm.jpg'" referrerpolicy="no-referrer">
+          </div>
+          <div class="space-y-6">
+            <p>Курс-исследование Таро Манара «МММ: Миры Мило Манары» – королевы среди эротических колод Таро! Чтобы понять колоду, созданную Пьетро Алиго на основе эротических комиксов знаменитого итальянского художника Мило Манары,– не нужно досконально знать систему Таро и проходить базовые курсы.</p>
+            <p>После этого курса вы сможете работать с колодой Таро Манара, делать расклады и проводить консультации, даже если не проходили никакого другого обучения по картам Таро!</p>
+            <p>Еще одна волшебная особенность этой колоды - исследуя ее, вы убиваете сразу двух зайцев:</p>
+            <ul class="list-disc pl-6 space-y-2">
+                <li>получаете <b>универсальный инструмент</b>, способный тонко раскрыть <b>95% запросов к Таро</b> (и можете легко перейти от «любителя с картишками» до профессионала, сделавшего Таро Манара источником своего дохода);</li>
+                <li>соприкасаетесь с собой и исцеляетесь, раскрепощаетесь и <b>избавляетесь от внутренних зажимов</b>, видите в сценариях арканов собственные травмы и путь к их коррекции.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="reveal">
+          <span class="text-xs uppercase tracking-[0.3em] font-semibold text-[#B4D8C4] mb-4 block">ВНУТРИ КУРСА</span>
+          <div class="relative py-12 px-8 md:px-12 bg-white/[0.03] backdrop-blur-md rounded-[2.5rem] overflow-hidden">
+            <div class="absolute -top-24 -left-24 w-64 h-64 bg-[#B4D8C4]/10 rounded-full blur-[80px]"></div>
+            <div class="absolute -bottom-24 -right-24 w-64 h-64 bg-[#B4D8C4]/5 rounded-full blur-[80px]"></div>
+            
+            <div class="relative z-10">
+              <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+                <div>
+                  <h3 class="text-4xl md:text-5xl font-host font-medium text-[#7D857E] leading-tight">На курсе <span class="text-[#EAEFEA]">мы с вами</span>:</h3>
+                </div>
+              </div>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
+                  <div class="relative group">
+                    <div class="relative z-10 space-y-3">
+                      <h4 class="text-[#EAEFEA] font-host font-bold text-lg md:text-xl relative inline-block">Анализ первоисточников</h4>
+                      <p class="text-sm md:text-base text-[#A8B0A9] leading-relaxed"><b>прочтем и проанализируем основные работы Мило Манары</b>, которые легли в основу колоды (начиная от нашумевшего и провокационного комикса «Клик», заканчивая крошечными арт-новеллами и работами Мило Манары совместно с известными кинорежиссерами)</p>
+                    </div>
+                    <span class="absolute -right-4 -bottom-4 text-7xl opacity-[0.03] pointer-events-none select-none grayscale group-hover:opacity-10 transition-opacity">📚</span>
+                  </div>
+
+                  <div class="relative group">
+                    <div class="relative z-10 space-y-3">
+                      <h4 class="text-[#EAEFEA] font-host font-bold text-lg md:text-xl relative inline-block">Значение каждого аркана</h4>
+                      <p class="text-sm md:text-base text-[#A8B0A9] leading-relaxed">поймем значение каждого аркана, учитывая специфику его первоисточника, <b>разберем их значения не только в сфере секса и отношений</b>, но и в теме финансов или профессиональной деятельности</p>
+                    </div>
+                    <span class="absolute -right-4 -bottom-4 text-7xl opacity-[0.03] pointer-events-none select-none grayscale group-hover:opacity-10 transition-opacity">🃏</span>
+                  </div>
+
+                  <div class="relative group">
+                    <div class="relative z-10 space-y-3">
+                      <h4 class="text-[#EAEFEA] font-host font-bold text-lg md:text-xl relative inline-block">Объективное чтение</h4>
+                      <p class="text-sm md:text-base text-[#A8B0A9] leading-relaxed">будем <b>практиковать</b> максимально объективное и глубокое чтение раскладов (поставим прививку от личных проекций)</p>
+                    </div>
+                    <span class="absolute -right-4 -bottom-4 text-7xl opacity-[0.03] pointer-events-none select-none grayscale group-hover:opacity-10 transition-opacity">🔭</span>
+                  </div>
+
+                  <div class="relative group">
+                    <div class="relative z-10 space-y-3">
+                      <h4 class="text-[#EAEFEA] font-host font-bold text-lg md:text-xl relative inline-block">Психологическая работа</h4>
+                      <p class="text-sm md:text-base text-[#A8B0A9] leading-relaxed">проведем <b>психологическую работу над собой</b>, раскрывая тему любви к себе и раскрытия сексуальности, выполняя небольшие задания</p>
+                    </div>
+                    <span class="absolute -right-4 -bottom-4 text-7xl opacity-[0.03] pointer-events-none select-none grayscale group-hover:opacity-10 transition-opacity">👤</span>
+                  </div>
+
+                  <div class="relative group">
+                    <div class="relative z-10 space-y-3">
+                      <h4 class="text-[#EAEFEA] font-host font-bold text-lg md:text-xl relative inline-block">Стратегия достижения цели</h4>
+                      <p class="text-sm md:text-base text-[#A8B0A9] leading-relaxed">познакомимся с <b>методикой построения стратегии для достижения цели</b> при помощи колоды Манара</p>
+                    </div>
+                    <span class="absolute -right-4 -bottom-4 text-7xl opacity-[0.03] pointer-events-none select-none grayscale group-hover:opacity-10 transition-opacity">🎯</span>
+                  </div>
+              </div>
+            </div>
+          </div>
+          <p class="mt-8 text-center text-[#A8B0A9]">Курс универсален и <b>подходит как для новичков, так и для профессионалов.</b> Он будет полезен <b>даже для тех, кто уже работает на колоде Таро Манара</b>, но хочет пополнить свою копилку знаний новым взглядом на арканы.</p>
+        </section>
+
+        <section class="reveal">
+          <h2 class="text-4xl md:text-5xl font-host font-medium text-[#7D857E] mb-2 leading-tight"><span class="text-[#EAEFEA]">Почему именно этот</span> курс?</h2>
+          <div class="my-8 -mx-6 md:mx-auto md:max-w-2xl">
+            <img src="img/mmm/mmm_2.jpg" alt="Почему именно этот курс" class="w-full aspect-square object-cover rounded-none md:rounded-2xl" onerror="this.src='img/mmm/2.jpg'" referrerpolicy="no-referrer">
+          </div>
+          <div class="space-y-6">
+            <p>Вы наверняка встречали на просторах Сети огромное количество книг и курсов по Таро Манара, но то, что предлагаю вам я - является <b>абсолютно уникальным подходом к этой колоде. Потому что я знаю, как побороть личные проекции в раскладах на отношения!</b></p>
+            <p>В этом признается не каждый специалист, но поскольку тема отношений является «живой» для каждого – мы не застрахованы от бессознательного «переноса» личных ассоциаций с реальными людьми или ситуациями в расклад. Особенно когда речь заходит о Манаре – колоде, слабо соотносящейся с классической системой, и обладающей очень «живыми» изображениями.</p>
+            <p>Для того, чтобы избежать этого – мы должны найти «опору» каждому аркану.</p>
+            <p>На протяжении нескольких лет я <b>анализировала творчество Мило Манары</b>, коллекционировала его артбуки и комиксы (большинство из которых недоступно на русском языке).</p>
+            <p>Благодаря этому я узнала каждого персонажа аркана, историю каждой иллюстрации и проанализировала колоду без притягивания личных историй, максимально объективно. Именно это знание, глубину и точные трактовки вы получите во время обучения.</p>
+          </div>
+        </section>
+
+        <section class="reveal">
+            <h2 class="text-4xl md:text-5xl font-host font-medium text-[#7D857E] mb-2 leading-tight"><span class="text-[#EAEFEA]">Программа</span> курса</h2>
+            <div class="space-y-8">
+                <!-- Module 1 -->
+                <div>
+                    <span class="text-xs uppercase tracking-[0.2em] font-semibold text-[#B4D8C4] mb-4 block">Блок 1. Мир и женщины Мило Манара: теория</span>
+                    <div class="bg-white/[0.03] backdrop-blur-sm rounded-2xl overflow-hidden relative">
+                        <img src="img/mmm/mmm_block1.jpg" alt="Блок 1" class="w-full aspect-square object-cover" onerror="this.src='img/mmm/3.jpg'">
+                        <div class="p-6 md:p-8 pb-4 md:pb-4">
+                            <ul class="list-none p-0 space-y-3 mb-0">
+                                <li class="flex items-start gap-3"><div class="w-2 h-2 rounded-full bg-[#B4D8C4] mt-2 flex-shrink-0"></div><span class="text-[#A8B0A9]">Мило Манара: история творчества, источники вдохновения;</span></li>
+                                <li class="flex items-start gap-3"><div class="w-2 h-2 rounded-full bg-[#B4D8C4] mt-2 flex-shrink-0"></div><span class="text-[#A8B0A9]">Обзор и анализ основных источников Таро Манара: Клик, Похождения Джузеппе Бергмана, Гуллевириана, Бумажный Человек, Индийское Лето и др.</span></li>
+                                <li class="flex items-start gap-3"><div class="w-2 h-2 rounded-full bg-[#B4D8C4] mt-2 flex-shrink-0"></div><span class="text-[#A8B0A9]">Основные символы Таро Манара и их первоисточники: кинопленка;</span></li>
+                                <li class="flex items-start gap-3"><div class="w-2 h-2 rounded-full bg-[#B4D8C4] mt-2 flex-shrink-0"></div><span class="text-[#A8B0A9]">Подробный анализ 78 арканов Таро Манара.</span></li>
+                                <li class="flex items-start gap-3"><div class="w-2 h-2 rounded-full bg-[#B4D8C4] mt-2 flex-shrink-0"></div><span class="text-[#A8B0A9]">Обязательным приложением к блоку будут pdf и фото-материалы с работами Мило Манары.</span></li>
+                            </ul>
+                        </div>
+                        <div class="bg-white/5 p-6 md:p-8 pt-4 md:pt-4">
+                            <p class="mb-4 font-bold text-[#EAEFEA] text-lg md:text-xl">По итогу блока:</p>
+                            <ul class="list-none p-0 space-y-3">
+                                <li class="flex items-start gap-3"><div class="w-2 h-2 rounded-full bg-[#B4D8C4] mt-2 flex-shrink-0"></div><span class="text-[#A8B0A9]">будете доподлинно понимать значение каждого аркана Таро Манара, избегая стереотипов и личных искажений;</span></li>
+                                <li class="flex items-start gap-3"><div class="w-2 h-2 rounded-full bg-[#B4D8C4] mt-2 flex-shrink-0"></div><span class="text-[#A8B0A9]">сможете видеть перспективу отношений или развития ситуации на основании сторонних позиций расклада;</span></li>
+                                <li class="flex items-start gap-3"><div class="w-2 h-2 rounded-full bg-[#B4D8C4] mt-2 flex-shrink-0"></div><span class="text-[#A8B0A9]">сможете составлять психологический портрет человека на основе персонажей комиксов Мило Манары;</span></li>
+                                <li class="flex items-start gap-3"><div class="w-2 h-2 rounded-full bg-[#B4D8C4] mt-2 flex-shrink-0"></div><span class="text-[#A8B0A9]">приобретете психологические знания о людях, которые сможете применять как в работе с Таро, так и в жизни;</span></li>
+                                <li class="flex items-start gap-3"><div class="w-2 h-2 rounded-full bg-[#B4D8C4] mt-2 flex-shrink-0"></div><span class="text-[#A8B0A9]">сэкономите свое драгоценное время на поиски первоисточников Манары, потому что это сделала для вас я )))))</span></li>
+                                <li class="flex items-start gap-3"><div class="w-2 h-2 rounded-full bg-[#B4D8C4] mt-2 flex-shrink-0"></div><span class="text-[#A8B0A9]">лучше <b>узнаете самого себя</b> и свои тайные желания.</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module 2 -->
+                <div>
+                    <span class="text-xs uppercase tracking-[0.2em] font-semibold text-[#B4D8C4] mb-4 block">Блок 2. Через эротику к голой правде: практика</span>
+                    <div class="bg-white/[0.03] backdrop-blur-sm rounded-2xl overflow-hidden relative">
+                        <img src="img/mmm/mmm_block2.jpg" alt="Блок 2" class="w-full aspect-square object-cover" onerror="this.src='img/mmm/4.jpg'">
+                        <div class="p-6 md:p-8 pb-4 md:pb-4">
+                            <ul class="list-none p-0 space-y-3 mb-0">
+                                <li class="flex items-start gap-3"><div class="w-2 h-2 rounded-full bg-[#B4D8C4] mt-2 flex-shrink-0"></div><span class="text-[#A8B0A9]">Алгоритм чтения расклада с примерами;</span></li>
+                                <li class="flex items-start gap-3"><div class="w-2 h-2 rounded-full bg-[#B4D8C4] mt-2 flex-shrink-0"></div><span class="text-[#A8B0A9]">Групповая и индивидуальная работа с чтением раскладов на Таро Манара;</span></li>
+                                <li class="flex items-start gap-3"><div class="w-2 h-2 rounded-full bg-[#B4D8C4] mt-2 flex-shrink-0"></div><span class="text-[#A8B0A9]">Схемы и разборы авторских раскладов, методика построения стратегии достижения цели на Таро Манара.</span></li>
+                            </ul>
+                        </div>
+                        <div class="bg-white/5 p-6 md:p-8 pt-4 md:pt-4">
+                            <p class="mb-4 font-bold text-[#EAEFEA] text-lg md:text-xl">По итогу блока:</p>
+                            <ul class="list-none p-0 space-y-3">
+                                <li class="flex items-start gap-3"><div class="w-2 h-2 rounded-full bg-[#B4D8C4] mt-2 flex-shrink-0"></div><span class="text-[#A8B0A9]">усовершенствуете свою технику чтения раскладов;</span></li>
+                                <li class="flex items-start gap-3"><div class="w-2 h-2 rounded-full bg-[#B4D8C4] mt-2 flex-shrink-0"></div><span class="text-[#A8B0A9]">получите в копилку несколько психологических инструментов для работы с клиентами, расширите спектр своих услуг;</span></li>
+                                <li class="flex items-start gap-3"><div class="w-2 h-2 rounded-full bg-[#B4D8C4] mt-2 flex-shrink-0"></div><span class="text-[#A8B0A9]">сможете составлять пошаговую стратегию выхода из кризисных ситуаций/достижения целей для себя и своих клиентов, чем сможете выделить себя на рынке Таро-услуг.</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Result Block -->
+        <section class="reveal">
+            <div class="bg-[#B4D8C4]/5 rounded-3xl p-8 md:p-12 relative overflow-hidden">
+                <div class="absolute -top-12 -right-12 w-48 h-48 bg-[#B4D8C4]/10 rounded-full blur-3xl"></div>
+                <div class="relative z-10">
+                    <h3 class="text-2xl md:text-3xl font-host font-bold text-[#EAEFEA] mb-8">После обучения:</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
+                        <div class="flex items-start gap-3">
+                            <div class="font-mono text-[#B4D8C4] text-sm md:text-base mt-0 flex-shrink-0">01</div>
+                            <span class="text-[#A8B0A9] text-sm md:text-base">владеете колодой Таро Манара и <b>выгодно отличаетесь от конкурентов объективным знанием значений карт</b> из первоисточника, ведь знаете историю, характер и даже имя каждого персонажа колоды;</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="font-mono text-[#B4D8C4] text-sm md:text-base mt-0 flex-shrink-0">02</div>
+                            <span class="text-[#A8B0A9] text-sm md:text-base"><b>сэкономили время</b> на поиск работ автора, проработку колоды и потратили его на повышение своей квалификации;</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="font-mono text-[#B4D8C4] text-sm md:text-base mt-0 flex-shrink-0">03</div>
+                            <span class="text-[#A8B0A9] text-sm md:text-base">во время расклада <b>отделяете свои личные проекции от ситуации клиента</b>, что делает ваши консультации еще более эффективными, повышает ваш статус и <b>привлекает новых клиентов</b>;</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="font-mono text-[#B4D8C4] text-sm md:text-base mt-0 flex-shrink-0">04</div>
+                            <span class="text-[#A8B0A9] text-sm md:text-base">имеете в своем арсенале <b>техники построения пошаговых стратегий достижения своих целей в отношениях с людьми</b>, пользуетесь этим не только для своей жизни, но и <b>значительно повышаете цену</b> на свои консультации за счет уникальных инструментов;</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="font-mono text-[#B4D8C4] text-sm md:text-base mt-0 flex-shrink-0">05</div>
+                            <span class="text-[#A8B0A9] text-sm md:text-base">владеете <b>базовыми знаниями по психологии</b> человеческой сексуальности;</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="font-mono text-[#B4D8C4] text-sm md:text-base mt-0 flex-shrink-0">06</div>
+                            <span class="text-[#A8B0A9] text-sm md:text-base">узнаете больше о своих тайных желаниях, не стесняетесь себя и своего тела, <b>не испытываете качелей в самооценке.</b></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="reveal space-y-12">
+            <h2 class="text-4xl md:text-6xl font-host font-medium text-[#EAEFEA] mb-10 leading-tight">Формат обучения</h2>
+            <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                <!-- 1 -->
+                <div class="education-plate p-3 md:p-4 min-h-[100px]">
+                  <div class="relative z-10">
+                    <span class="font-mono text-[#B4D8C4] text-[10px] mb-1.5 block opacity-40">01 -</span>
+                    <h4 class="text-[#EAEFEA] font-bold text-sm md:text-base leading-tight">Видеоуроки в записи. В среднем 50 мин</h4>
+                  </div>
+                  <svg class="absolute -right-4 -bottom-4 w-20 h-20 text-gray-500 opacity-5 transform rotate-12 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                </div>
+                <!-- 2 -->
+                <div class="education-plate p-3 md:p-4 min-h-[100px] group">
+                  <div class="relative z-10">
+                    <span class="font-mono text-[#B4D8C4] text-[10px] mb-1.5 block opacity-40">02 -</span>
+                    <h4 class="text-[#EAEFEA] font-bold text-sm md:text-base leading-tight">Практические занятия</h4>
+                  </div>
+                  <span class="absolute -right-2 -bottom-2 text-6xl opacity-[0.05] pointer-events-none select-none grayscale group-hover:opacity-10 transition-opacity">📝</span>
+                </div>
+                <!-- 3 -->
+                <div class="education-plate p-3 md:p-4 min-h-[100px] group">
+                  <div class="relative z-10">
+                    <span class="font-mono text-[#B4D8C4] text-[10px] mb-1.5 block opacity-40">03 -</span>
+                    <h4 class="text-[#EAEFEA] font-bold text-sm md:text-base leading-tight">Конспекты к каждому уроку</h4>
+                  </div>
+                  <span class="absolute -right-2 -bottom-2 text-6xl opacity-[0.05] pointer-events-none select-none grayscale group-hover:opacity-10 transition-opacity">📓</span>
+                </div>
+                <!-- 4 -->
+                <div class="education-plate p-3 md:p-4 min-h-[100px] group">
+                  <div class="relative z-10">
+                    <span class="font-mono text-[#B4D8C4] text-[10px] mb-1.5 block opacity-40">04 -</span>
+                    <h4 class="text-[#EAEFEA] font-bold text-sm md:text-base leading-tight">Сертификат о прохождении</h4>
+                  </div>
+                  <span class="absolute -right-2 -bottom-2 text-6xl opacity-[0.05] pointer-events-none select-none grayscale group-hover:opacity-10 transition-opacity">🏆</span>
+                </div>
+                <!-- 5 -->
+                <div class="education-plate p-3 md:p-4 min-h-[100px] group">
+                  <div class="relative z-10">
+                    <span class="font-mono text-[#B4D8C4] text-[10px] mb-1.5 block opacity-40">05 -</span>
+                    <h4 class="text-[#EAEFEA] font-bold text-sm md:text-base leading-tight">Обратная связь с ответами и разборами</h4>
+                  </div>
+                  <span class="absolute -right-2 -bottom-2 text-6xl opacity-[0.05] pointer-events-none select-none grayscale group-hover:opacity-10 transition-opacity">💬</span>
+                </div>
+                <!-- 6 -->
+                <div class="education-plate p-3 md:p-4 min-h-[100px] group">
+                  <div class="relative z-10">
+                    <span class="font-mono text-[#B4D8C4] text-[10px] mb-1.5 block opacity-40">06 -</span>
+                    <h4 class="text-[#EAEFEA] font-bold text-sm md:text-base leading-tight">Закрытая группа с вопросами, сплетнями и мемами</h4>
+                  </div>
+                  <span class="absolute -right-2 -bottom-2 text-6xl opacity-[0.05] pointer-events-none select-none grayscale group-hover:opacity-10 transition-opacity">🤪</span>
+                </div>
+                <!-- 7 -->
+                <div class="education-plate p-3 md:p-4 min-h-[100px] col-span-2 lg:col-span-2 group">
+                  <div class="relative z-10">
+                    <span class="font-mono text-[#B4D8C4] text-[10px] mb-1.5 block opacity-40">07 -</span>
+                    <h4 class="text-[#EAEFEA] font-bold text-sm md:text-base leading-tight">Неограниченный доступ к материалам курса</h4>
+                  </div>
+                  <span class="absolute -right-2 -bottom-2 text-6xl opacity-[0.05] pointer-events-none select-none grayscale group-hover:opacity-10 transition-opacity">🔄</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="pricing" class="reveal">
+            <h2 class="text-4xl md:text-5xl font-host font-medium text-[#7D857E] mb-2 leading-tight"><span class="text-[#EAEFEA]">Стоимость</span> и условия</h2>
+            <div class="max-w-5xl mx-auto">
+                <div class="bg-white/[0.03] backdrop-blur-sm rounded-3xl p-8 md:py-10 md:px-12 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-[#B4D8C4]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+                    <div class="grid md:grid-cols-2 gap-8 md:gap-12 items-center relative z-10">
+                        <div class="text-left py-2 md:py-0">
+                            <div class="flex items-center gap-4 mb-2">
+                                <span class="text-4xl md:text-5xl font-host font-bold text-[#B4D8C4]">17 666 ₽</span>
+                            </div>
+                            <p class="text-sm md:text-base text-[#A8B0A9]">С возможностью рассрочки</p>
+                        </div>
+                        <div class="flex flex-col gap-4">
+                            <div class="bg-white/[0.03] p-5 md:p-6 rounded-2xl">
+                                <div class="flex flex-col gap-4">
+                                    <div>
+                                        <p class="text-[#EAEFEA] text-sm md:text-base mb-2">Для записи на курс пишите мне:</p>
+                                        <div class="flex flex-col gap-2">
+                                            <a href="https://vk.com/tarotdeviant" target="_blank" class="w-full py-3 rounded-xl bg-[#B4D8C4] text-black font-bold text-sm uppercase tracking-widest hover:bg-[#A0C4B0] transition-colors text-center flex items-center justify-center gap-2">ВКОНТАКТЕ</a>
+                                            <a href="https://t.me/nortlin" target="_blank" class="w-full py-3 rounded-xl bg-[#B4D8C4] text-black font-bold text-sm uppercase tracking-widest hover:bg-[#A0C4B0] transition-colors text-center flex items-center justify-center gap-2">Telegram</a>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p class="text-[#EAEFEA] text-sm md:text-base mb-2">Оплатить без реквизитов:</p>
+                                        <a href="https://boosty.to/deviantarot/posts/19f7e2eb-5d61-4630-b06d-cf768e9bbdb3" target="_blank" class="w-full py-3 rounded-xl bg-[#F15F2C] text-white font-bold text-sm uppercase tracking-widest hover:bg-[#d94d1a] transition-colors text-center flex items-center justify-center gap-2">Boosty</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="reveal !mt-32 !mb-32">
+            <span class="text-xs uppercase tracking-[0.2em] font-semibold text-[#B4D8C4] mb-2 block">ЕСЛИ ЕЩЕ НЕ УВЕРЕНЫ</span>
+            <h2 class="text-3xl md:text-5xl font-host font-medium leading-tight mt-4">
+                <span class="text-[#EAEFEA]">Бесплатные материалы</span> <span class="text-[#7D857E]">по курсу</span>
+            </h2>
+            
+            <div class="space-y-12 mt-12">
+                <div>
+                    <p class="text-[#A8B0A9] mb-4">Вебинар, посвященный фундаментальной ошибке в изучении Таро Манара и разбору арканов при помощи комиксов Мило Манары.</p>
+                    <div class="relative w-full aspect-video rounded-2xl overflow-hidden bg-black/5">
+                        <iframe 
+                            src="https://vk.com/video_ext.php?oid=-168427550&id=456239189" 
+                            class="absolute inset-0 w-full h-full"
+                            frameborder="0" 
+                            allowfullscreen="1">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+      </div>
+    </main>
+    <footer class="bg-black py-16 px-6">
+      <div class="max-w-7xl mx-auto flex flex-col items-start gap-10 text-left">
+        <a href="standalone" class="flex items-center gap-3 group">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-8 h-8">
+            <g>
+              <polygon fill="#B4D8C4" points="506.95 147.08 506.95 192.36 404.15 192.36 404.15 480.26 358.83 480.26 358.83 147.08 506.95 147.08"/>
+              <rect fill="#B4D8C4" x="358.83" y="34.89" width="147.44" height="45.28"/>
+            </g>
+            <path fill="#B4D8C4" d="M7.82,34.22h282.03v446.04H7.82V34.22ZM53.14,439.03c54.23.89,112.01-11.39,149.48-53.03,52.76-58.64,55.38-175.73,12.43-240.21-36.07-54.15-99.33-71.81-161.92-70.34v363.59Z"/>
+          </svg>
+          <span class="font-futura text-2xl font-semibold tracking-tight text-[#B4D8C4] group-hover:opacity-80 transition-opacity">DEVIANTAROT</span>
+        </a>
+        <div class="flex flex-wrap items-center justify-center md:justify-start gap-6 md:gap-8">
+            <a href="https://t.me/deviantarot" target="_blank" class="text-xs text-[#A8B0A9] hover:text-[#EAEFEA] transition-colors uppercase font-bold tracking-[0.2em]">Telegram</a>
+            <a href="https://youtube.com/@deviantarot" target="_blank" class="text-xs text-[#A8B0A9] hover:text-[#EAEFEA] transition-colors uppercase font-bold tracking-[0.2em]">YouTube</a>
+            <a href="https://vk.com/deviantarot" target="_blank" class="text-xs text-[#A8B0A9] hover:text-[#EAEFEA] transition-colors uppercase font-bold tracking-[0.2em]">VK</a>
+            <a href="https://boosty.to/deviantarot" target="_blank" class="text-xs text-[#A8B0A9] hover:text-[#EAEFEA] transition-colors uppercase font-bold tracking-[0.2em]">Boosty</a>
+        </div>
+      </div>
+    </footer>
+    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" xmlns="http://www.w3.org/2000/svg">
+      <filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.595" numOctaves="2" stitchTiles="stitch" seed="0" /></filter>
+    </svg>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const reveals = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.01, rootMargin: '0px 0px 50px 0px' });
+        
+        reveals.forEach(el => revealObserver.observe(el));
+ 
+        const checkInitialReveals = () => {
+            reveals.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight) {
+                    el.classList.add('active');
+                    revealObserver.unobserve(el);
+                }
+            });
+        };
+ 
+        setTimeout(checkInitialReveals, 100);
+
+        let isMenuOpen = false;
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuOverlay = document.getElementById('menu-overlay');
+        const line1 = document.getElementById('line1');
+        const line2 = document.getElementById('line2');
+        const line3 = document.getElementById('line3');
+
+        function toggleMenu() {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                mobileMenu.classList.add('active');
+                menuOverlay.classList.remove('hidden');
+                setTimeout(() => menuOverlay.classList.add('opacity-100'), 10);
+                line1.classList.add('rotate-45', 'translate-y-2');
+                line2.classList.add('opacity-0');
+                line3.classList.add('-rotate-45', '-translate-y-2');
+                document.body.style.overflow = 'hidden';
+            } else {
+                mobileMenu.classList.remove('active');
+                menuOverlay.classList.remove('opacity-100');
+                setTimeout(() => { menuOverlay.classList.add('hidden'); }, 400);
+                line1.classList.remove('rotate-45', 'translate-y-2');
+                line2.classList.remove('opacity-0');
+                line3.classList.remove('-rotate-45', '-translate-y-2');
+                document.body.style.overflow = '';
+            }
+        }
+        if (menuToggle) menuToggle.addEventListener('click', toggleMenu);
+        if (menuOverlay) menuOverlay.addEventListener('click', toggleMenu);
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => { if (isMenuOpen) toggleMenu(); });
+        });
+      });
+    </script>
+  </body>
+</html>
