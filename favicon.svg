@@ -1,5 +1,13 @@
-<svg xmlns="http://www.w3.org/2001/svg" viewBox="0 0 100 100">
-  <circle cx="50" cy="50" r="45" fill="none" stroke="#FEA6A6" stroke-width="2"/>
-  <path d="M30 50 Q 50 20 70 50 Q 50 80 30 50" fill="#FEA6A6" opacity="0.3"/>
-  <circle cx="50" cy="50" r="5" fill="#FEA6A6"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_Слой_1" data-name="Слой 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1475 1319.01">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #b4d3c4;
+      }
+    </style>
+  </defs>
+  <path class="cls-1" d="M834,0v1319.01s-834,0-834,0V0h834ZM134,1198c137.98,1.12,283.83-23.65,393.48-112.02,95.95-77.34,149.23-195.8,165.38-316.62,18.58-138.95,3.32-301.82-70.44-423.27-99.57-163.94-271.67-219.48-455.88-225.12-10.82-.33-21.73.33-32.54.04v1077Z"/>
+  <polygon class="cls-1" points="1475 334 1475 468 1172 468 1172 1319 1038 1319 1038 334 1475 334"/>
+  <rect class="cls-1" x="1037" y="1" width="437" height="134"/>
 </svg>
