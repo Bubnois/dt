@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DevianTarot | Курс «16 друзей Оушэна»</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Roboto:wght@400;500;700&family=Host+Grotesk:wght@400;500;700;900&family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --text-primary: #EAEFEA;
+        --text-secondary: #A8B0A9;
+        --accent: #e44b5a;
+        --bg-main: #0A0A0A;
+      }
+      
+      body { 
+        font-family: 'Roboto', sans-serif; 
+        background-color: var(--bg-main); 
+        color: var(--text-primary); 
+        line-height: 1.6; 
+      }
+      
+      .font-host { font-family: 'Host Grotesk', sans-serif; }
+      .font-jost { font-family: 'Jost', sans-serif; }
+      .font-futura { font-family: 'Futura', 'Jost', sans-serif; }
+      .font-garamond { font-family: 'EB Garamond', serif; }
+
+      .background-glow {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        overflow: hidden;
+        pointer-events: none;
+      }
+      .background-glow::after {
+        content: '';
+        position: absolute;
+        width: 1600px;
+        height: 1600px;
+        background: radial-gradient(50% 50% at 50% 50%, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.2) 25%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0) 75%);
+        border-radius: 50%;
+        opacity: 0.12;
+        bottom: -750px;
+        right: -750px;
+      }
+
+      #noise-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+        z-index: 9999;
+        overflow: hidden;
+      }
+      #noise-overlay::before {
+        content: '';
+        position: absolute;
+        top: -100%;
+        left: -100%;
+        width: 300%;
+        height: 300%;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        background-repeat: repeat;
+        background-size: 256px 256px;
+        opacity: 0.22;
+        animation: noise-jitter 0.2s infinite steps(2);
+        will-change: transform;
+        backface-visibility: hidden;
+      }
+
+      @keyframes noise-jitter {
+        0% { transform: translate(0, 0); }
+        10% { transform: translate(-1%, -1%); }
+        20% { transform: translate(-2%, 1%); }
+        30% { transform: translate(1%, -2%); }
+        40% { transform: translate(-1%, 3%); }
+        50% { transform: translate(-2%, 1%); }
+        60% { transform: translate(3%, 0); }
+        70% { transform: translate(0, 2%); }
+        80% { transform: translate(-3%, 0); }
+        90% { transform: translate(2%, 1%); }
+        100% { transform: translate(1%, 0); }
+      }
+      
+      .prose-custom { color: var(--text-secondary); }
+      .prose-custom h1 { color: var(--text-primary); }
+      .prose-custom strong { color: inherit; font-weight: 700; }
+      
+      .education-plate {
+        background-color: rgba(255, 255, 255, 0.05);
+        padding: 0.6rem 1rem;
+        border-radius: 0.75rem;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: 80px;
+      }
+
+      .education-plate:hover {
+        background-color: rgba(255, 255, 255, 0.08);
+        transform: translateY(-2px);
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+      }
+      .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Mobile Menu Fix */
+      #mobile-menu {
+        transform: translateX(100%);
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      #mobile-menu.active {
+        transform: translateX(0);
+      }
+    </style>
+  </head>
+  <body class="bg-[#0A0A0A] text-[#EAEFEA] font-sans overflow-x-hidden">
+    <div class="background-glow"></div>
+    <div id="noise-overlay"></div>
+    <nav id="navbar" class="fixed top-0 left-0 w-full z-[100] px-6 py-4 transition-all bg-black/30 backdrop-blur-md">
+      <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <a href="/" class="flex items-center gap-3 group">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-8 h-8">
+            <g>
+              <polygon fill="#B4D8C4" points="506.95 147.08 506.95 192.36 404.15 192.36 404.15 480.26 358.83 480.26 358.83 147.08 506.95 147.08"/>
+              <rect fill="#B4D8C4" x="358.83" y="34.89" width="147.44" height="45.28"/>
+            </g>
+            <path fill="#B4D8C4" d="M7.82,34.22h282.03v446.04H7.82V34.22ZM53.14,439.03c54.23.89,112.01-11.39,149.48-53.03,52.76-58.64,55.38-175.73,12.43-240.21-36.07-54.15-99.33-71.81-161.92-70.34v363.59Z"/>
+          </svg>
+          <span class="font-futura text-xl font-semibold tracking-wider text-[#B4D8C4] group-hover:opacity-80 transition-opacity">DEVIANTAROT</span></a>
+        
+        <div class="hidden md:flex items-center gap-8">
+          <a href="/#about" class="text-xs text-[#A8B0A9] hover:text-[#EAEFEA] transition-colors uppercase font-bold tracking-[0.2em]">Об авторе</a>
+          <a href="/#video" class="text-xs text-[#A8B0A9] hover:text-[#EAEFEA] transition-colors uppercase font-bold tracking-[0.2em]">Видео</a>
+          <a href="/#courses" class="text-xs text-[#A8B0A9] hover:text-[#EAEFEA] transition-colors uppercase font-bold tracking-[0.2em]">Курсы</a>
+          <a href="/#sessions" class="text-xs text-[#A8B0A9] hover:text-[#EAEFEA] transition-colors uppercase font-bold tracking-[0.2em]">Услуги</a>
+          <a href="/#articles" class="text-xs text-[#A8B0A9] hover:text-[#EAEFEA] transition-colors uppercase font-bold tracking-[0.2em]">Статьи</a>
+          <a href="/#contact" class="text-xs text-[#A8B0A9] hover:text-[#EAEFEA] transition-colors uppercase font-bold tracking-[0.2em]">Контакты</a>
+        </div>
+
+        <button id="menu-toggle" class="md:hidden relative z-[110] p-2 text-[#B4D8C4]" >
+          <div class="space-y-1.5 w-6">
+            <span class="block h-0.5 bg-current transition-all origin-center"   id="line1"></span>
+            <span class="block h-0.5 bg-current transition-all"  id="line2"></span>
+            <span class="block h-0.5 bg-current transition-all origin-center"   id="line3"></span>
+          </div>
+        </button>
+      </div>
+
+      <!-- Mobile Menu Content -->
+      <div id="mobile-menu" class="fixed top-0 right-0 w-[80%] h-screen bg-[#0A0A0A] z-[105] shadow-2xl flex flex-col p-12 gap-8" >
+        <div class="mt-12 space-y-8">
+          <a href="/#about" class="text-3xl font-host font-medium text-[#EAEFEA] mobile-link block hover:text-[#B4D8C4]" >Об авторе</a>
+          <a href="/#video" class="text-3xl font-host font-medium text-[#EAEFEA] mobile-link block hover:text-[#B4D8C4]" >Видео</a>
+          <a href="/#courses" class="text-3xl font-host font-medium text-[#EAEFEA] mobile-link block hover:text-[#B4D8C4]" >Курсы</a>
+          <a href="/#sessions" class="text-3xl font-host font-medium text-[#EAEFEA] mobile-link block hover:text-[#B4D8C4]" >Услуги</a>
+          <a href="/#articles" class="text-3xl font-host font-medium text-[#EAEFEA] mobile-link block hover:text-[#B4D8C4]" >Статьи</a>
+          <a href="/#contact" class="text-3xl font-host font-medium text-[#EAEFEA] mobile-link block hover:text-[#B4D8C4]" >Контакты</a>
+        </div>
+      </div>
+      <div id="menu-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[101] transition-opacity hidden opacity-0"    tabindex="0"  ></div>
+    </nav>
+    <main>
+      <header id="hero" class="relative h-[80vh] flex items-center justify-center overflow-hidden z-10">
+        <div class="absolute inset-0 z-0 scale-105">
+          <!-- Since I don't see specific images for ocean, I'll use moon ones as requested "точно также, как и moon", but I'll change the alt text. -->
+          <img src="img/ocean/1.jpg" alt="16 друзей Оушэна" class="w-full h-full object-cover object-center" referrerpolicy="no-referrer">
+        </div>
+      </header>
+
+      <div class="max-w-4xl mx-auto prose-custom px-6 md:px-12 pt-12 text-sm md:text-base leading-relaxed text-[#A8B0A9]">
+        <section class="reveal">
+          <div class="space-y-6">
+            <p>Возникали ли у Вас когда-либо трудности с чтением Придворных арканов Таро?</p>
+            <p>Приходилось ли тяжело вздыхать, когда они появлялись в раскладе?</p>
+            <p>А может быть, Вы - совсем новичок и не понимаете, чем значительно отличается Рыцарь Кубков от Пажа, а от информации в Интернете голова кругом?</p>
+            <p>На самом деле все просто, ведь <strong>Придворные арканы живут среди нас!</strong></p>
+            <p>Возможно, когда Вы ломаете голову над особенностями чтения Короля Мечей – этот Король Мечей сидит рядом с Вами за соседним столиком. И зная, каким образом он понимает мир и воспринимает информацию – можно легко прочесть эту карту на любой вопрос, даже если он не подразумевает человека в ответе.</p>
+            <p>Главное – получить достойное сокровище, на которое эти 16 друзей легко позарятся и станут Вашими друзьями. Это сокровище – <strong>система соционических типов</strong>. И я готова рассказать ее вам и выдать досье на каждого из 16 друзей Королевского двора Таро. Готовы ли Вы завладеть этими секретными знаниями?</p>
+            <p>Тогда приглашаю Вас в психологический курс-исследование <strong>«16 друзей Оушэна: психологические типы Придворных арканов Таро»</strong>!</p>
+          </div>
+        </section>
+      </div>
+
+      <div class="max-w-4xl mx-auto prose-custom px-6 md:px-12 pt-12 pb-32 space-y-16 md:space-y-24 text-sm md:text-base leading-relaxed text-[#A8B0A9]">
+        
+        <section class="reveal">
+          <div class="mb-3">
+            <h2 class="text-4xl md:text-5xl font-host font-medium text-[#7D857E] leading-tight"><span class="text-[#EAEFEA]">Про что</span> этот курс?</h2>
+          </div>
+          <div class="-mx-6 md:mx-0 w-[calc(100%+3rem)] md:w-full rounded-none md:rounded-2xl overflow-hidden mb-8">
+            <img src="img/courses/ocean.jpg" alt="О курсе" class="w-full h-auto aspect-square object-cover" referrerpolicy="no-referrer">
+          </div>
+          <div class="space-y-6">
+            <p>Я создала этот курс для того, чтобы его участники - и вы в том числе! - смогли:</p>
+            <div class="grid grid-cols-2 gap-4 my-6">
+              <div class="education-plate p-3 md:p-6 min-h-[100px] flex items-center relative overflow-hidden group">
+                <svg class="absolute -right-2 -bottom-2 w-16 md:w-20 h-16 md:h-20 text-[#e44b5a] opacity-[0.04] group-hover:opacity-[0.08] transition-opacity pointer-events-none rotate-12" fill="currentColor" viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg>
+                <div class="relative z-10 w-full text-center">
+                  <p class="text-[#EAEFEA] font-medium text-sm md:text-base leading-tight">Систематизировать знания по придворным арканам</p>
+                </div>
+              </div>
+              <div class="education-plate p-3 md:p-6 min-h-[100px] flex items-center relative overflow-hidden group">
+                <svg class="absolute -right-2 -bottom-2 w-16 md:w-20 h-16 md:h-20 text-[#e44b5a] opacity-[0.04] group-hover:opacity-[0.08] transition-opacity pointer-events-none rotate-12" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                <div class="relative z-10 w-full text-center">
+                  <p class="text-[#EAEFEA] font-medium text-sm md:text-base leading-tight">Создать психологический портрет каждого из 16 Придворных арканов</p>
+                </div>
+              </div>
+              <div class="education-plate p-3 md:p-6 min-h-[100px] flex items-center relative overflow-hidden group">
+                <svg class="absolute -right-2 -bottom-2 w-16 md:w-20 h-16 md:h-20 text-[#e44b5a] opacity-[0.04] group-hover:opacity-[0.08] transition-opacity pointer-events-none rotate-12" fill="currentColor" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                <div class="relative z-10 w-full text-center">
+                  <p class="text-[#EAEFEA] font-medium text-sm md:text-base leading-tight">Понять особенности «взаимоотношений» между ними</p>
+                </div>
+              </div>
+              <div class="education-plate p-3 md:p-6 min-h-[100px] flex items-center relative overflow-hidden group">
+                <svg class="absolute -right-2 -bottom-2 w-16 md:w-20 h-16 md:h-20 text-[#e44b5a] opacity-[0.04] group-hover:opacity-[0.08] transition-opacity pointer-events-none rotate-12" fill="currentColor" viewBox="0 0 24 24"><path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 16H5V5h14v14z"/><path d="M7 12h2v5H7zm4-3h2v8h-2zm4-3h2v11h-2z"/></svg>
+                <div class="relative z-10 w-full text-center">
+                  <p class="text-[#EAEFEA] font-medium text-sm md:text-base leading-tight">Читать придворные карты на любых позициях в раскладе</p>
+                </div>
+              </div>
+            </div>
+            <p>И это еще не все:) Курс поможет вам не только глубже понимать арканы и лучше читать расклады, но и пригодится в реальной жизни! Все полученные знания и навыки можно применять во взаимоотношениях с людьми в реальной жизни, понимая специфику, сильные и слабые стороны его соционического типа.</p>
+          </div>
+        </section>
+
+        <!-- INSERT_POINT_2 -->
+        
+        <section class="reveal">
+          <div class="bg-white/[0.03] backdrop-blur-sm rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-[#e44b5a]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+            <!-- Hexagons with increased visibility -->
+            <svg class="absolute -top-[10%] -left-[10%] w-[500px] h-[500px] text-[#e44b5a]/[0.06] fill-current -rotate-12 pointer-events-none" viewBox="0 0 100 100"><polygon points="50 0, 100 25, 100 75, 50 100, 0 75, 0 25" /></svg>
+            <svg class="absolute top-[30%] -right-[5%] w-[350px] h-[350px] text-[#e44b5a]/[0.08] fill-current rotate-12 pointer-events-none" viewBox="0 0 100 100"><polygon points="50 0, 100 25, 100 75, 50 100, 0 75, 0 25" /></svg>
+            <svg class="absolute bottom-[-10%] left-[20%] w-[600px] h-[600px] text-[#e44b5a]/[0.05] fill-current rotate-45 pointer-events-none" viewBox="0 0 100 100"><polygon points="50 0, 100 25, 100 75, 50 100, 0 75, 0 25" /></svg>
+            <div class="relative z-10">
+              <div class="mb-10">
+                <h2 class="text-4xl md:text-5xl font-host font-medium text-[#7D857E] leading-tight mb-4"><span class="text-[#EAEFEA]">Для кого</span> этот курс?</h2>
+                <p class="text-[#A8B0A9] italic text-base">Курс рассчитан именно для тебя, если ты:</p>
+              </div>
+              
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-8 mb-16">
+                <div>
+                  <h4 class="text-[#EAEFEA] font-medium text-base md:text-lg mb-2">Новичок,</h4>
+                  <p class="text-[#A8B0A9] font-normal text-sm md:text-base leading-relaxed">с небольшими представлениями о придворных картах и сочувствующих и хочешь сразу разобраться, не тратя время на байки с форумов</p>
+                </div>
+                <div>
+                  <h4 class="text-[#EAEFEA] font-medium text-base md:text-lg mb-2">Продолжающий,</h4>
+                  <p class="text-[#A8B0A9] font-normal text-sm md:text-base leading-relaxed">который испытывает затруднения с чтением придворных карт в раскладах, не уверен, какой полюс значения применить, и хочешь получить отличную практическую систему</p>
+                </div>
+                <div>
+                  <h4 class="text-[#EAEFEA] font-medium text-base md:text-lg mb-2">Таролог,</h4>
+                  <p class="text-[#A8B0A9] font-normal text-sm md:text-base leading-relaxed">который не испытывает затруднения с трактовкой, но любит психологический подход к Таро и хочет преисполнится в своем сознании</p>
+                </div>
+                <div>
+                  <h4 class="text-[#EAEFEA] font-medium text-base md:text-lg mb-2">Человек,</h4>
+                  <p class="text-[#A8B0A9] font-normal text-sm md:text-base leading-relaxed">который очень любит различные типологии и хочет построить гармоничные отношения со своим окружением и без всяких картишек</p>
+                </div>
+                <div>
+                  <h4 class="text-[#EAEFEA] font-medium text-base md:text-lg mb-2">Любитель,</h4>
+                  <p class="text-[#A8B0A9] font-normal text-sm md:text-base leading-relaxed">исследовать себя и других, узнавать свои сильные стороны и уметь прикрывать слабости</p>
+                </div>
+                <div>
+                  <h4 class="text-[#EAEFEA] font-medium text-base md:text-lg mb-2">Тот, кто любит мемы,</h4>
+                  <p class="text-[#A8B0A9] font-normal text-sm md:text-base leading-relaxed">даже если вы карты в руках не держали. Вам понравится!</p>
+                </div>
+              </div>
+
+              <div class="pt-10 border-t border-white/10">
+                <h2 class="text-3xl md:text-4xl font-host font-medium text-[#7D857E] leading-tight mb-8">Кому курс <span class="text-[#EAEFEA]">не подойдет?</span></h2>
+                <ul class="list-none p-0 space-y-6">
+                   <li class="flex items-start gap-4">
+                     <span class="text-[#e44b5a] font-bold mt-1 opacity-60">—</span>
+                     <span class="text-[#A8B0A9] text-sm md:text-base leading-relaxed">Новичковым новичкам, которые не имеют представления о структуре Таро;</span>
+                   </li>
+                   <li class="flex items-start gap-4">
+                     <span class="text-[#e44b5a] font-bold mt-1 opacity-60">—</span>
+                     <span class="text-[#A8B0A9] text-sm md:text-base leading-relaxed">Магистрам соционики, профессионалам в этой области знаний, поскольку основной упор курса сделан на придворные карты и отсутствуют узкоспециализированные дебрийные дебри соционики, от которых взрывается мозг, а базовые базы вы знаете.</span>
+                   </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="reveal">
+          <span class="text-xs uppercase tracking-[0.3em] font-semibold text-[#e44b5a] mb-4 block">РЕЗУЛЬТАТЫ</span>
+          <div class="relative py-12 px-8 md:px-12 bg-white/[0.03] backdrop-blur-md rounded-[2.5rem] overflow-hidden">
+            <!-- Hexagonal decorations -->
+            <svg class="absolute top-[5%] -left-[5%] w-[200px] h-[200px] text-[#e44b5a]/[0.03] fill-current rotate-[30deg] pointer-events-none" viewBox="0 0 100 100"><polygon points="50 0, 100 25, 100 75, 50 100, 0 75, 0 25" /></svg>
+            <svg class="absolute bottom-[10%] -right-[10%] w-[300px] h-[300px] text-[#e44b5a]/[0.04] fill-current -rotate-[15deg] pointer-events-none" viewBox="0 0 100 100"><polygon points="50 0, 100 25, 100 75, 50 100, 0 75, 0 25" /></svg>
+            <svg class="absolute top-[40%] right-[15%] w-[150px] h-[150px] text-[#e44b5a]/[0.02] fill-current rotate-[45deg] pointer-events-none" viewBox="0 0 100 100"><polygon points="50 0, 100 25, 100 75, 50 100, 0 75, 0 25" /></svg>
+            
+            <!-- Decorative background elements -->
+            <div class="absolute -top-24 -left-24 w-64 h-64 bg-[#e44b5a]/10 rounded-full blur-[80px]"></div>
+            <div class="absolute -bottom-24 -right-24 w-64 h-64 bg-[#e44b5a]/5 rounded-full blur-[80px]"></div>
+            
+            <div class="relative z-10">
+              <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+                <div>
+                  <h3 class="text-4xl md:text-5xl font-host font-medium text-[#7D857E] leading-tight"><span class="text-[#EAEFEA]">Чему именно я научусь</span> на курсе?</h3>
+                </div>
+              </div>
+              
+              <div class="mb-8">
+                  <div class="relative inline-block mb-4"><svg class="absolute -left-3 -top-4 w-12 h-12 text-[#e44b5a] opacity-10 z-0 pointer-events-none" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zm0 7.5l-6.5-3.25L12 3l6.5 3.25L12 9.5z"/><path d="M2 12l10 5 10-5v5l-10 5-10-5v-5z"/></svg><h4 class="text-[#EAEFEA] font-bold text-xl relative z-10">В качестве таролога:</h4></div>
+                  <ul class="list-none p-0 space-y-3">
+                     <li class="flex items-start gap-3"><span class="text-[#e44b5a] text-xs mt-1 leading-none">⬣</span><span class="text-[#A8B0A9]">Сформируете цельный, понятный образ каждого Придворного аркана: психологический портрет, характер, сильные и слабые стороны, как этот персонаж ведет себя в разных ситуациях, и т.д.;</span></li>
+                     <li class="flex items-start gap-3"><span class="text-[#e44b5a] text-xs mt-1 leading-none">⬣</span><span class="text-[#A8B0A9]">Будете легко читать Придворные карты на любых позициях в раскладе: не только как описание конкретного человека, но и как характеристику ситуации, и как прогноз на будущее;</span></li>
+                     <li class="flex items-start gap-3"><span class="text-[#e44b5a] text-xs mt-1 leading-none">⬣</span><span class="text-[#A8B0A9]">Поймете, как взаимодействуют друг с другом Придворные карты: имея в голове четкую и понятную систему взаимоотношений между ними вы будете точно отслеживать противоречия в раскладе и видеть возможные проблемы и зоны роста клиента, о которых его сознание даже не подозревает;</span></li>
+                     <li class="flex items-start gap-3"><span class="text-[#e44b5a] text-xs mt-1 leading-none">⬣</span><span class="text-[#A8B0A9]">Сделаете свои консультации глубже и подробнее: ведь теперь у вас будут полные знания о придворных картах, их поведении и отношениях друг с другом;</span></li>
+                     <li class="flex items-start gap-3"><span class="text-[#e44b5a] text-xs mt-1 leading-none">⬣</span><span class="text-[#A8B0A9]">Начнете давать своим кверентам конкретные рекомендации в сфере отношений с другими людьми: зная Придворный аркан человека, вы подробно расскажете, как кверенту лучше себя вести с таким человеком, как найти к нему подход, что лучше говорить и что делать, а чего стоит избегать.</span></li>
+                  </ul>
+              </div>
+              
+              <div class="mb-8">
+                  <div class="relative inline-block mb-4"><svg class="absolute -left-3 -top-4 w-12 h-12 text-[#e44b5a] opacity-10 z-0 pointer-events-none" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg><h4 class="text-[#EAEFEA] font-bold text-xl relative z-10">В своей личной жизни:</h4></div>
+                  <ul class="list-none p-0 space-y-3">
+                     <li class="flex items-start gap-3"><span class="text-[#e44b5a] text-xs mt-1 leading-none">⬣</span><span class="text-[#A8B0A9]">Построите гармоничные отношения со своим окружением, ведь теперь будете знать о темах для беседы и видах взаимодействия, которых лучше избегать при общении с тем или иным человеком;</span></li>
+                     <li class="flex items-start gap-3"><span class="text-[#e44b5a] text-xs mt-1 leading-none">⬣</span><span class="text-[#A8B0A9]">Добьетесь успехов в карьере, ведь теперь будете знать, как и в какой сфере «преподнести себя обществу»;</span></li>
+                     <li class="flex items-start gap-3"><span class="text-[#e44b5a] text-xs mt-1 leading-none">⬣</span><span class="text-[#A8B0A9]">При необходимости найдете наиболее подходящего спутника жизни именно для вас ;)</span></li>
+                  </ul>
+              </div>
+
+              <div>
+                  <div class="relative inline-block mb-4"><svg class="absolute -left-3 -top-4 w-12 h-12 text-[#e44b5a] opacity-10 z-0 pointer-events-none" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg><h4 class="text-[#EAEFEA] font-bold text-xl relative z-10">Вы узнаете свои сильные и слабые стороны - и поймете:</h4></div>
+                  <ul class="list-none p-0 space-y-3">
+                     <li class="flex items-start gap-3"><span class="text-[#e44b5a] text-xs mt-1 leading-none">⬣</span><span class="text-[#A8B0A9]">Как использовать их для успешного заработка на картишках и не только;</span></li>
+                     <li class="flex items-start gap-3"><span class="text-[#e44b5a] text-xs mt-1 leading-none">⬣</span><span class="text-[#A8B0A9]">С какими людьми удобнее работать именно вам;</span></li>
+                     <li class="flex items-start gap-3"><span class="text-[#e44b5a] text-xs mt-1 leading-none">⬣</span><span class="text-[#A8B0A9]">На чем можно простроить личный бренд и стать уникальным тарологом.</span></li>
+                  </ul>
+              </div>
+
+            </div>
+          </div>
+        </section>
+        
+        <!-- INSERT_POINT_3 -->
+        
+        <div class="space-y-4">
+            <p class="text-[#EAEFEA] font-medium text-lg md:text-xl text-center">Вы поймете не только придворные карты, но и мотивацию поступков людей вокруг вас!</p>
+            <p class="text-center">Это поможет вам избегать опрометчивых решений в отношениях, выстраивать выгодные стратегии поведения, легко и просто налаживать контакты с людьми без траты лишних нервных клеток!</p>
+            <p class="text-center mt-6">Что же именно вас ждет на курсе, откуда берутся такие классные результаты? Читайте ниже!</p>
+        </div>
+
+      </div>
+
+      <section class="bg-[#F2F2F2] py-24 my-24 overflow-hidden relative">
+        <div class="max-w-4xl mx-auto px-6 md:px-12 relative z-10">
+          <div class="reveal mb-12">
+            <h2 class="text-4xl md:text-5xl font-host font-medium text-[#7D857E] leading-tight"><span class="text-[#0A0A0A]">Программа</span> курса</h2>
+          </div>
+          <div class="space-y-12">
+            <!-- Module 1 -->
+            <div class="reveal">
+              <span class="text-xs uppercase tracking-[0.2em] font-semibold text-[#e44b5a] mb-4 block">1 блок: Введение</span>
+              <div class="bg-white rounded-2xl overflow-hidden shadow-sm relative">
+                <img src="img/ocean/2.jpg" alt="Блок 1" class="w-full aspect-square object-cover">
+                <div class="p-6 md:p-8 pb-4 md:pb-4 relative">
+                  <!-- Hexagons -->
+                  <svg class="absolute top-4 right-4 w-24 h-24 text-[#e44b5a]/[0.04] fill-current rotate-12 pointer-events-none" viewBox="0 0 100 100"><polygon points="50 0, 100 25, 100 75, 50 100, 0 75, 0 25" /></svg>
+                  <svg class="absolute bottom-8 left-4 w-16 h-16 text-[#e44b5a]/[0.03] fill-current -rotate-12 pointer-events-none" viewBox="0 0 100 100"><polygon points="50 0, 100 25, 100 75, 50 100, 0 75, 0 25" /></svg>
+                  
+                  <ul class="list-none p-0 space-y-3 mb-0 relative z-10">
+                    <li class="flex items-start gap-3"><span class="text-[#e44b5a] text-xs mt-1 leading-none">⬣</span><span class="text-[#4A4A4A]">Подходы к чтению Придворных арканов, способы определения полюса чтения;</span></li>
+                    <li class="flex items-start gap-3"><span class="text-[#e44b5a] text-xs mt-1 leading-none">⬣</span><span class="text-[#4A4A4A]">История и подходы к психологическим типологиям людей. Типы Юнга, MBTI, Соционика;</span></li>
+                    <li class="flex items-start gap-3"><span class="text-[#e44b5a] text-xs mt-1 leading-none">⬣</span><span class="text-[#4A4A4A]">Коротко о методиках типирования;</span></li>
+                    <li class="flex items-start gap-3"><span class="text-[#e44b5a] text-xs mt-1 leading-none">⬣</span><span class="text-[#4A4A4A]">Дихотомии: оси логика/этика, экстраверсия/интроверсия, сенсорика/интуиция, рациональность/иррациональность;</span></li>
+                    <li class="flex items-start gap-3"><span class="text-[#e44b5a] text-xs mt-1 leading-none">⬣</span><span class="text-[#4A4A4A]">Типирование придворных карт по дихотомиям.</span></li>
+                  </ul>
+                </div>
+                <div class="bg-[#EBEBEB] p-6 md:p-8 pt-4 md:pt-4 relative">
+                  <!-- Hexagons -->
+                  <svg class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 text-[#e44b5a]/[0.02] fill-current rotate-45 pointer-events-none" viewBox="0 0 100 100"><polygon points="50 0, 100 25, 100 75, 50 100, 0 75, 0 25" /></svg>
+                  
+                  <p class="mb-4 font-bold text-[#0A0A0A] text-lg md:text-xl relative z-10">По результатам блока:</p>
+                  <ul class="list-none p-0 space-y-3 relative z-10">
+                    <li class="flex items-start gap-3"><span class="font-mono text-[#e44b5a] text-xs font-bold mt-1 opacity-70">01</span><span class="text-[#4A4A4A]">понимаете, как и умеете быстро и безошибочно определять в каком из ключей читать придворную карту в раскладе;</span></li>
+                    <li class="flex items-start gap-3"><span class="font-mono text-[#e44b5a] text-xs font-bold mt-1 opacity-70">02</span><span class="text-[#4A4A4A]">знаете отличительные особенности и историю возникновения основных психологических типологий, основные методики типирования и их ловушки;</span></li>
+                    <li class="flex items-start gap-3"><span class="font-mono text-[#e44b5a] text-xs font-bold mt-1 opacity-70">03</span><span class="text-[#4A4A4A]">понимаете какие признаки характерны для каждой придворной карты, а главное из чего они следуют, видите нюансы, которые привносятся в каждый расклад, благодаря этим знаниям;</span></li>
+                    <li class="flex items-start gap-3"><span class="font-mono text-[#e44b5a] text-xs font-bold mt-1 opacity-70">04</span><span class="text-[#4A4A4A]">получите первые знания, благодаря которым сможете выделить сильные стороны вас и кого-то из вашего окружения.</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- Module 2 and 3 -->
+            <div class="reveal">
+              <span class="text-xs uppercase tracking-[0.2em] font-semibold text-[#e44b5a] mb-4 block">2 и 3 блоки: «Черный с белым не носить». Соционические функции</span>
+              <div class="bg-white rounded-2xl overflow-hidden shadow-sm relative">
+                <img src="img/ocean/3.jpg" alt="Блоки 2 и 3" class="w-full aspect-square object-cover">
+                <div class="p-6 md:p-8 pb-4 md:pb-4 relative">
+                  <!-- Hexagons -->
+                  <svg class="absolute top-10 left-10 w-20 h-20 text-[#e44b5a]/[0.04] fill-current rotate-[20deg] pointer-events-none" viewBox="0 0 100 100"><polygon points="50 0, 100 25, 100 75, 50 100, 0 75, 0 25" /></svg>
+                  
+                  <ul class="list-none p-0 space-y-3 mb-0 relative z-10">
+                    <li class="flex items-start gap-3"><span class="text-[#e44b5a] text-xs mt-1 leading-none">⬣</span><span class="text-[#4A4A4A]">Понятие «соционическая функция»;</span></li>
+                    <li class="flex items-start gap-3"><span class="text-[#e44b5a] text-xs mt-1 leading-none">⬣</span><span class="text-[#4A4A4A]">Анализ 8 соционических функций с практическими примерами;</span></li>
+                    <li class="flex items-start gap-3"><span class="text-[#e44b5a] text-xs mt-1 leading-none">⬣</span><span class="text-[#4A4A4A]">Понятие и анализ позиций Модели А.</span></li>
+                  </ul>
+                </div>
+                <div class="bg-[#EBEBEB] p-6 md:p-8 pt-4 md:pt-4 relative">
+                  <!-- Hexagons -->
+                  <svg class="absolute top-1/2 left-10 -translate-y-1/2 w-32 h-32 text-[#e44b5a]/[0.02] fill-current rotate-[30deg] pointer-events-none" viewBox="0 0 100 100"><polygon points="50 0, 100 25, 100 75, 50 100, 0 75, 0 25" /></svg>
+                  
+                  <p class="mb-4 font-bold text-[#0A0A0A] text-lg md:text-xl relative z-10">По результатам блока:</p>
+                  <ul class="list-none p-0 space-y-3 mb-0 relative z-10">
+                    <li class="flex items-start gap-3"><span class="font-mono text-[#e44b5a] text-xs font-bold mt-1 opacity-70">01</span><span class="text-[#4A4A4A]">Понимаете особенности проявления признаков, характерных для придворных карт с точки зрения соционической теории;</span></li>
+                    <li class="flex items-start gap-3"><span class="font-mono text-[#e44b5a] text-xs font-bold mt-1 opacity-70">02</span><span class="text-[#4A4A4A]">Видите как проявляются одинаковые с первого взгляда признаки у разных придворных карт;</span></li>
+                    <li class="flex items-start gap-3"><span class="font-mono text-[#e44b5a] text-xs font-bold mt-1 opacity-70">03</span><span class="text-[#4A4A4A]">На примерах из раскладов видите отличия между белой и черной функцией;</span></li>
+                    <li class="flex items-start gap-3"><span class="font-mono text-[#e44b5a] text-xs font-bold mt-1 opacity-70">04</span><span class="text-[#4A4A4A]">Знаете и понимаете структуру соционического типа придворных карт;</span></li>
+                    <li class="flex items-start gap-3"><span class="font-mono text-[#e44b5a] text-xs font-bold mt-1 opacity-70">05</span><span class="text-[#4A4A4A]">Получите практические признаки, говорящие о силе/слабости каждой функции, по которым сможете уловить их проявления у вас или вашего окружения и поймете как это можно использовать для своих целей.</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- Module 4 -->
+            <div class="reveal">
+              <span class="text-xs uppercase tracking-[0.2em] font-semibold text-[#e44b5a] mb-4 block">4 блок: «Досье на стол». Соционические типы Придворных арканов</span>
+              <div class="bg-white rounded-2xl overflow-hidden shadow-sm relative">
+                <img src="img/ocean/4.jpg" alt="Блок 4" class="w-full aspect-square object-cover">
+                <div class="p-6 md:p-8 pb-4 md:pb-4 relative">
+                  <!-- Hexagons -->
+                  <svg class="absolute bottom-4 right-10 w-32 h-32 text-[#e44b5a]/[0.03] fill-current rotate-[60deg] pointer-events-none" viewBox="0 0 100 100"><polygon points="50 0, 100 25, 100 75, 50 100, 0 75, 0 25" /></svg>
+                  <svg class="absolute top-2 right-20 w-12 h-12 text-[#e44b5a]/[0.05] fill-current -rotate-[10deg] pointer-events-none" viewBox="0 0 100 100"><polygon points="50 0, 100 25, 100 75, 50 100, 0 75, 0 25" /></svg>
+                  
+                  <ul class="list-none p-0 space-y-3 mb-0 relative z-10">
+                    <li class="flex items-start gap-3"><span class="text-[#e44b5a] text-xs mt-1 leading-none">⬣</span><span class="text-[#4A4A4A]">Подробное описание каждой из 16 придворных карт по модели А;</span></li>
+                    <li class="flex items-start gap-3"><span class="text-[#e44b5a] text-xs mt-1 leading-none">⬣</span><span class="text-[#4A4A4A]">Практические примеры использования характеристик в «неодушевленных» вопросах (перспектива, деньги, проблемы).</span></li>
+                  </ul>
+                </div>
+                <div class="bg-[#EBEBEB] p-6 md:p-8 pt-4 md:pt-4 relative">
+                  <!-- Hexagons -->
+                  <svg class="absolute bottom-4 right-1/4 w-24 h-24 text-[#e44b5a]/[0.03] fill-current -rotate-[15deg] pointer-events-none" viewBox="0 0 100 100"><polygon points="50 0, 100 25, 100 75, 50 100, 0 75, 0 25" /></svg>
+                  
+                  <p class="mb-4 font-bold text-[#0A0A0A] text-lg md:text-xl relative z-10">По результатам блока:</p>
+                  <ul class="list-none p-0 space-y-3 mb-0 relative z-10">
+                    <li class="flex items-start gap-3"><span class="font-mono text-[#e44b5a] text-xs font-bold mt-1 opacity-70">01</span><span class="text-[#4A4A4A]">Имеете подробное «досье» на всех 16 друзей Оушэна;</span></li>
+                    <li class="flex items-start gap-3"><span class="font-mono text-[#e44b5a] text-xs font-bold mt-1 opacity-70">02</span><span class="text-[#4A4A4A]">Знаете сильные и слабые стороны каждой придворной карты, зону их интересов, как они действуют в новых ситуациях, а в каких вопросах и темах легко внушаемы (и многое еще);</span></li>
+                    <li class="flex items-start gap-3"><span class="font-mono text-[#e44b5a] text-xs font-bold mt-1 opacity-70">03</span><span class="text-[#4A4A4A]">Умеете применять характеристик типа придворных карт в вопросах «неодушевленного» типа (стадии развития ситуации);</span></li>
+                    <li class="flex items-start gap-3"><span class="font-mono text-[#e44b5a] text-xs font-bold mt-1 opacity-70">04</span><span class="text-[#4A4A4A]">Узнаете больше о себе и своих знакомых, поймете почему у вас возникают провалы в каких-то сферах жизни и как их исправить;</span></li>
+                    <li class="flex items-start gap-3"><span class="font-mono text-[#e44b5a] text-xs font-bold mt-1 opacity-70">05</span><span class="text-[#4A4A4A]">Будете обожать придворные карты в раскладах.</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- Module 5 -->
+            <div class="reveal">
+              <span class="text-xs uppercase tracking-[0.2em] font-semibold text-[#e44b5a] mb-4 block">5 блок: «Король + Королева Жезлов =….?» Отношения между придворными картами</span>
+              <div class="bg-white rounded-2xl overflow-hidden shadow-sm relative">
+                <img src="img/ocean/5.jpg" alt="Блок 5" class="w-full aspect-square object-cover">
+                <div class="p-6 md:p-8 pb-4 md:pb-4 relative">
+                  <!-- Hexagons -->
+                  <svg class="absolute top-1/2 left-4 -translate-y-1/2 w-28 h-28 text-[#e44b5a]/[0.04] fill-current -rotate-45 pointer-events-none" viewBox="0 0 100 100"><polygon points="50 0, 100 25, 100 75, 50 100, 0 75, 0 25" /></svg>
+                  
+                  <ul class="list-none p-0 space-y-3 mb-0 relative z-10">
+                    <li class="flex items-start gap-3"><span class="text-[#e44b5a] text-xs mt-1 leading-none">⬣</span><span class="text-[#4A4A4A]">Виды благоприятных интертимных отношений;</span></li>
+                    <li class="flex items-start gap-3"><span class="text-[#e44b5a] text-xs mt-1 leading-none">⬣</span><span class="text-[#4A4A4A]">Виды двойственных интертимных отношений;</span></li>
+                    <li class="flex items-start gap-3"><span class="text-[#e44b5a] text-xs mt-1 leading-none">⬣</span><span class="text-[#4A4A4A]">Виды неблагоприятных интертипных отношений.</span></li>
+                  </ul>
+                </div>
+                <div class="bg-[#EBEBEB] p-6 md:p-8 pt-4 md:pt-4 relative">
+                  <!-- Hexagons -->
+                  <svg class="absolute top-4 right-10 w-20 h-20 text-[#e44b5a]/[0.02] fill-current rotate-[120deg] pointer-events-none" viewBox="0 0 100 100"><polygon points="50 0, 100 25, 100 75, 50 100, 0 75, 0 25" /></svg>
+                  <svg class="absolute bottom-2 left-1/2 -translate-x-1/2 w-12 h-12 text-[#e44b5a]/[0.04] fill-current rotate-[45deg] pointer-events-none" viewBox="0 0 100 100"><polygon points="50 0, 100 25, 100 75, 50 100, 0 75, 0 25" /></svg>
+                  
+                  <p class="mb-4 font-bold text-[#0A0A0A] text-lg md:text-xl relative z-10">По результатам блока:</p>
+                  <ul class="list-none p-0 space-y-3 mb-0 relative z-10">
+                    <li class="flex items-start gap-3"><span class="font-mono text-[#e44b5a] text-xs font-bold mt-1 opacity-70">01</span><span class="text-[#4A4A4A]">Четко понимаете в каких отношениях состоят придворные карты и как их совместное появление будут влиять на динамику и трактовку раскладов;</span></li>
+                    <li class="flex items-start gap-3"><span class="font-mono text-[#e44b5a] text-xs font-bold mt-1 opacity-70">02</span><span class="text-[#4A4A4A]">Поймете одни из глубинных причин недопонимания с вашими друзьями/партнерами/родственниками и как можно сгладить «острые углы»;</span></li>
+                    <li class="flex items-start gap-3"><span class="font-mono text-[#e44b5a] text-xs font-bold mt-1 opacity-70">03</span><span class="text-[#4A4A4A]">Получите ответ на долгожданный вопрос «КАКОЙ ПАРТНЕР МНЕ ПО СУДЬБЕ????» (с точки зрения соционики).</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- Advanced Block -->
+            <div class="reveal">
+              <span class="text-xs uppercase tracking-[0.2em] font-semibold text-[#e44b5a] mb-4 block">Продвинутый блок курса</span>
+              <div class="bg-white rounded-2xl overflow-hidden shadow-sm relative">
+                <img src="img/ocean/6.jpg" alt="Продвинутый блок" class="w-full aspect-square object-cover">
+                <div class="p-6 md:p-8 pb-4 md:pb-4 relative">
+                  <!-- Hexagons -->
+                  <svg class="absolute top-4 right-4 w-20 h-20 text-[#e44b5a]/[0.05] fill-current rotate-12 pointer-events-none" viewBox="0 0 100 100"><polygon points="50 0, 100 25, 100 75, 50 100, 0 75, 0 25" /></svg>
+                  <svg class="absolute bottom-2 left-1/3 w-16 h-16 text-[#e44b5a]/[0.03] fill-current -rotate-[30deg] pointer-events-none" viewBox="0 0 100 100"><polygon points="50 0, 100 25, 100 75, 50 100, 0 75, 0 25" /></svg>
+                  
+                  <p class="text-[#0A0A0A] font-bold mb-3 relative z-10">Особенностью этого блока является работа только на придворных арканах.</p>
+                  <ul class="list-none p-0 space-y-3 mb-0 relative z-10">
+                    <li class="flex items-start gap-3"><span class="text-[#e44b5a] text-xs mt-1 leading-none">⬣</span><span class="text-[#4A4A4A]">Разборы 8 авторских раскладов для придворных карт;</span></li>
+                    <li class="flex items-start gap-3"><span class="text-[#e44b5a] text-xs mt-1 leading-none">⬣</span><span class="text-[#4A4A4A]">Урок с элементами психологии о несовпадении реального социотипа человека с раскладом. Причины. Понятие Персоны;</span></li>
+                    <li class="flex items-start gap-3"><span class="text-[#e44b5a] text-xs mt-1 leading-none">⬣</span><span class="text-[#4A4A4A]">Использование особенностей своего социотипа в формировании стратегии продвижения как таролога или иного помогающего специалиста.</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="max-w-4xl mx-auto prose-custom px-6 md:px-12 pb-32 space-y-16 md:space-y-24 text-sm md:text-base leading-relaxed text-[#A8B0A9]">
+        
+        <!-- INSERT_POINT_4 -->
+        
+        <section class="reveal">
+          <div class="mb-3">
+            <h2 class="text-4xl md:text-5xl font-host font-medium text-[#7D857E] leading-tight">А если <span class="text-[#EAEFEA]">я не буду успевать?</span></h2>
+          </div>
+          <div class="space-y-6">
+            <p>Закономерный вопрос летом, однако спешу вас заверить: курс обладает максимально удобным форматом для изучения!</p>
+            <p>Вас ждут 3-4 видеоурока в неделю, поэтому вам не нужно жертвовать своими повседневными делами и быть «как штык» на прямом эфире, а можно изучать материал в удобном месте в удобное время (даже под пальмой).</p>
+            <p>Вопросы можно будет задать в чате.</p>
+          </div>
+        </section>
+
+        <section class="reveal">
+          <div class="mb-3">
+            <h2 class="text-4xl md:text-6xl font-host font-medium text-[#EAEFEA] leading-tight">Форматы участия</h2>
+          </div>
+            <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                <div class="education-plate p-3 md:p-4 min-h-[100px]">
+                  <div class="relative z-10">
+                    <span class="font-mono text-[#e44b5a] text-[10px] mb-1.5 block opacity-40">01 -</span>
+                    <h4 class="text-[#EAEFEA] font-bold text-sm md:text-base leading-tight">3-4 видеоурока в неделю (в среднем 40 мин)</h4>
+                  </div>
+                </div>
+                <div class="education-plate p-3 md:p-4 min-h-[100px]">
+                  <div class="relative z-10">
+                    <span class="font-mono text-[#e44b5a] text-[10px] mb-1.5 block opacity-40">02 -</span>
+                    <h4 class="text-[#EAEFEA] font-bold text-sm md:text-base leading-tight">Не сложные, но интересные домашние задания в конце серии уроков</h4>
+                  </div>
+                </div>
+                
+                <div class="education-plate p-3 md:p-4 min-h-[100px]">
+                  <div class="relative z-10">
+                    <span class="font-mono text-[#e44b5a] text-[10px] mb-1.5 block opacity-40">03 -</span>
+                    <h4 class="text-[#EAEFEA] font-bold text-sm md:text-base leading-tight">Конспекты каждого урока</h4>
+                  </div>
+                </div>
+                <div class="education-plate p-3 md:p-4 min-h-[100px]">
+                  <div class="relative z-10">
+                    <span class="font-mono text-[#e44b5a] text-[10px] mb-1.5 block opacity-40">04 -</span>
+                    <h4 class="text-[#EAEFEA] font-bold text-sm md:text-base leading-tight">Дополнительные материалы: литературные и видео-рекомендации</h4>
+                  </div>
+                </div>
+                <div class="education-plate p-3 md:p-4 min-h-[100px]">
+                  <div class="relative z-10">
+                    <span class="font-mono text-[#e44b5a] text-[10px] mb-1.5 block opacity-40">05 -</span>
+                    <h4 class="text-[#EAEFEA] font-bold text-sm md:text-base leading-tight">Сертификат об успешном окончании курса</h4>
+                  </div>
+                </div>
+                <div class="education-plate p-3 md:p-4 min-h-[100px]">
+                  <div class="relative z-10">
+                    <span class="font-mono text-[#e44b5a] text-[10px] mb-1.5 block opacity-40">06 -</span>
+                    <h4 class="text-[#EAEFEA] font-bold text-sm md:text-base leading-tight">Закрытая группа с вопросами, сплетнями и мемами</h4>
+                  </div>
+                </div>
+                <div class="education-plate p-3 md:p-4 min-h-[100px] col-span-2">
+                  <div class="relative z-10">
+                    <span class="font-mono text-[#e44b5a] text-[10px] mb-1.5 block opacity-40">07 -</span>
+                    <h4 class="text-[#EAEFEA] font-bold text-sm md:text-base leading-tight">Неограниченный доступ к материалам курса</h4>
+                  </div>
+                </div>
+            </div>
+        </section>
+
+                <section id="pricing" class="reveal">
+          <div class="mb-3">
+            <h2 class="text-4xl md:text-5xl font-host font-medium text-[#7D857E] leading-tight"><span class="text-[#EAEFEA]">Стоимость</span> и условия</h2>
+          </div>
+            <div class="max-w-5xl mx-auto">
+                <div class="bg-white/[0.03] backdrop-blur-sm rounded-3xl p-8 md:py-10 md:px-12 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-[#e44b5a]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+                    <div class="grid md:grid-cols-2 gap-8 md:gap-12 items-start relative z-10">
+                        <div class="text-left py-2 md:py-0">
+                            <div class="mb-6 mt-4">
+                                <div class="flex items-center gap-3 mb-1">
+                                    <span class="text-2xl md:text-3xl text-[#A8B0A9] line-through block font-host">28 816 ₽</span>
+                                    <span class="text-xs md:text-sm text-[#111311] px-2 py-0.5 rounded bg-[#e44b5a] font-bold">до 16 мая</span>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                  <span class="text-5xl md:text-6xl font-host font-bold text-[#EAEFEA] block drop-shadow-lg">24 016 ₽</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-col gap-4">
+                            <div class="bg-white/[0.03] p-5 md:p-6 rounded-2xl">
+                                <div class="flex flex-col gap-4">
+                                    <div>
+                                        <p class="text-[#EAEFEA] text-sm md:text-base mb-2">Для записи на курс пишите мне:</p>
+                                        <div class="flex flex-col gap-2">
+                                            <a href="https://vk.com/tarotdeviant" target="_blank" class="w-full py-3 rounded-xl bg-[#e44b5a] text-black font-bold text-sm uppercase tracking-widest hover:bg-[#c53d4c] transition-colors text-center flex items-center justify-center gap-2">
+                                              ВКОНТАКТЕ
+                                            </a>
+                                            <a href="https://t.me/deviantarot" target="_blank" class="w-full py-3 rounded-xl bg-[#e44b5a] text-black font-bold text-sm uppercase tracking-widest hover:bg-[#c53d4c] transition-colors text-center flex items-center justify-center gap-2">
+                                              Telegram
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p class="text-[#EAEFEA] text-sm md:text-base mb-2">Оплатить без реквизитов:</p>
+                                        <a href="https://boosty.to/deviantarot/posts/c01255ac-36ac-4fd3-af9a-3bccf22eb53c" target="_blank" class="w-full py-3 rounded-xl bg-[#F15F2C] text-white font-bold text-sm uppercase tracking-widest hover:bg-[#d94d1a] transition-colors text-center flex items-center justify-center gap-2">Boosty</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+<div class="grid grid-cols-1 gap-4 md:gap-6 mt-12 mb-12 reveal max-w-5xl mx-auto">
+            <div class="flex items-center justify-center p-4">
+                <p class="text-lg md:text-2xl font-host text-[#EAEFEA] font-medium leading-tight text-center relative z-10">Ну что, готовы ограбить банк с знаниями вместе с 16 Придворными друзьями Оушэна?</p>
+            </div>
+            <div class="bg-[#e44b5a]/5 backdrop-blur-sm rounded-xl p-3 md:p-4 flex flex-col md:flex-row items-center justify-center text-center gap-2 relative overflow-hidden">
+                 <div class="absolute top-0 right-0 w-32 h-32 bg-[#e44b5a]/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2"></div>
+                <div class="relative z-10 flex flex-col md:flex-row items-center justify-center gap-1 md:gap-2">
+                    <span class="text-[#A8B0A9] text-xs md:text-sm font-medium uppercase tracking-wider block opacity-70">Старт курса:</span>
+                    <span class="text-[#e44b5a] text-base md:text-xl font-bold font-host block leading-tight">21 мая 2026 года</span>
+                </div>
+            </div>
+        </div>
+
+        <section class="reveal !mt-32 !mb-32">
+          <div class="mb-3">
+            <span class="text-xs uppercase tracking-[0.2em] font-semibold text-[#e44b5a] mb-2 block">ЕСЛИ ЕЩЕ НЕ УВЕРЕНЫ</span>
+            <h2 class="text-3xl md:text-5xl font-host font-medium leading-tight">
+                <span class="text-[#EAEFEA]">Бесплатные материалы</span> <span class="text-[#7D857E]">по курсу</span>
+            </h2>
+          </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                <!-- Video 1 -->
+                <div class="video-card group relative flex flex-col bg-white/5 rounded-2xl overflow-hidden border border-transparent hover:bg-white/10 transition-all duration-300">
+                  <div class="aspect-video bg-zinc-900 relative overflow-hidden">
+                    <iframe 
+                        src="https://www.youtube.com/embed/YgiKHc8eRks" 
+                        class="absolute inset-0 w-full h-full"
+                        title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+                    </iframe>
+                  </div>
+                  <div class="p-6 flex flex-col flex-grow">
+                    <h3 class="text-base md:text-lg font-medium text-[#EAEFEA] leading-snug group-hover:text-[#e44b5a] transition-colors mb-3">Соционические типы Придворных арканов Таро</h3>
+                    <p class="text-[10px] uppercase tracking-widest text-[#7D857E] mt-4 font-mono">YouTube</p>
+                  </div>
+                </div>
+            </div>
+        </section>
+
+      </div>
+    </main>
+    <footer class="bg-black py-16 px-6">
+      <div class="max-w-7xl mx-auto flex flex-col items-start gap-10 text-left">
+        <a href="/" class="flex items-center gap-3 group">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-8 h-8">
+            <g>
+              <polygon fill="#B4D8C4" points="506.95 147.08 506.95 192.36 404.15 192.36 404.15 480.26 358.83 480.26 358.83 147.08 506.95 147.08"/>
+              <rect fill="#B4D8C4" x="358.83" y="34.89" width="147.44" height="45.28"/>
+            </g>
+            <path fill="#B4D8C4" d="M7.82,34.22h282.03v446.04H7.82V34.22ZM53.14,439.03c54.23.89,112.01-11.39,149.48-53.03,52.76-58.64,55.38-175.73,12.43-240.21-36.07-54.15-99.33-71.81-161.92-70.34v363.59Z"/>
+          </svg>
+          <span class="font-futura text-2xl font-semibold tracking-tight text-[#B4D8C4] group-hover:opacity-80 transition-opacity">DEVIANTAROT</span>
+        </a>
+        <div class="flex flex-wrap items-center justify-center md:justify-start gap-6 md:gap-8">
+            <a href="https://t.me/deviantarot" target="_blank" class="text-xs text-[#A8B0A9] hover:text-[#EAEFEA] transition-colors uppercase font-bold tracking-[0.2em]">Telegram</a>
+            <a href="https://youtube.com/@deviantarot" target="_blank" class="text-xs text-[#A8B0A9] hover:text-[#EAEFEA] transition-colors uppercase font-bold tracking-[0.2em]">YouTube</a>
+            <a href="https://vk.com/deviantarot" target="_blank" class="text-xs text-[#A8B0A9] hover:text-[#EAEFEA] transition-colors uppercase font-bold tracking-[0.2em]">VK</a>
+            <a href="https://boosty.to/deviantarot" target="_blank" class="text-xs text-[#A8B0A9] hover:text-[#EAEFEA] transition-colors uppercase font-bold tracking-[0.2em]">Boosty</a>
+        </div>
+      </div>
+    </footer>
+    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" xmlns="http://www.w3.org/2000/svg">
+      <filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.595" numOctaves="2" stitchTiles="stitch" seed="0" /></filter>
+    </svg>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const reveals = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.01, rootMargin: '0px 0px 50px 0px' });
+        
+        reveals.forEach(el => revealObserver.observe(el));
+
+        // Immediate check for elements already in view
+        const checkInitialReveals = () => {
+            reveals.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight) {
+                    el.classList.add('active');
+                    revealObserver.unobserve(el);
+                }
+            });
+        };
+
+        // Check after a short delay
+        setTimeout(checkInitialReveals, 100);
+
+        let isMenuOpen = false;
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuOverlay = document.getElementById('menu-overlay');
+        const line1 = document.getElementById('line1');
+        const line2 = document.getElementById('line2');
+        const line3 = document.getElementById('line3');
+
+        function toggleMenu() {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                mobileMenu.classList.add('active');
+                menuOverlay.classList.remove('hidden');
+                setTimeout(() => menuOverlay.classList.add('opacity-100'), 10);
+                line1.classList.add('rotate-45', 'translate-y-2');
+                line2.classList.add('opacity-0');
+                line3.classList.add('-rotate-45', '-translate-y-2');
+                document.body.style.overflow = 'hidden';
+            } else {
+                mobileMenu.classList.remove('active');
+                menuOverlay.classList.remove('opacity-100');
+                setTimeout(() => { menuOverlay.classList.add('hidden'); }, 400);
+                line1.classList.remove('rotate-45', 'translate-y-2');
+                line2.classList.remove('opacity-0');
+                line3.classList.remove('-rotate-45', '-translate-y-2');
+                document.body.style.overflow = '';
+            }
+        }
+        if (menuToggle) menuToggle.addEventListener('click', toggleMenu);
+        if (menuOverlay) menuOverlay.addEventListener('click', toggleMenu);
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => { if (isMenuOpen) toggleMenu(); });
+        });
+      });
+    </script>
+  </body>
+</html>

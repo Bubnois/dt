@@ -206,6 +206,7 @@
     <!-- Tags -->
     <div class="mb-3 reveal" style="transition-delay: 100ms;">
         <div class="flex flex-wrap gap-2 md:gap-3" id="course-tags">
+          <button class="course-tag px-4 py-2 rounded-full border border-white/10 text-xs md:text-sm font-medium text-[#A8B0A9] hover:bg-white/5 transition-colors text-center" data-target="course-ocean">Придворные арканы</button>
           <button class="course-tag px-4 py-2 rounded-full border border-white/10 text-xs md:text-sm font-medium text-[#A8B0A9] hover:bg-white/5 transition-colors text-center" data-target="course-6">Таро теней</button>
           <button class="course-tag px-4 py-2 rounded-full border border-white/10 text-xs md:text-sm font-medium text-[#A8B0A9] hover:bg-white/5 transition-colors text-center" data-target="course-3">Deviant Moon</button>
           <button class="course-tag px-4 py-2 rounded-full border border-white/10 text-xs md:text-sm font-medium text-[#A8B0A9] hover:bg-white/5 transition-colors text-center" data-target="course-5">Чеколли</button>
@@ -216,6 +217,26 @@
 
     <!-- Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 reveal" style="transition-delay: 200ms;">
+        <!-- Course Ocean -->
+        <a href="ocean" id="course-ocean" class="course-card flex flex-col group/card overflow-hidden bg-white/5 rounded-2xl border border-transparent hover:bg-white/10 transition-all duration-500">
+            <div class="relative w-full aspect-square overflow-hidden flex-shrink-0">
+                <img src="img/courses/ocean.jpg" alt="16 Друзей Оушэна" class="w-full h-full object-cover transition-transform duration-700 group-hover/card:scale-105" referrerpolicy="no-referrer">
+            </div>
+            <div class="p-6 md:p-8 pt-6 flex flex-col flex-grow">
+                <h3 class="text-xl md:text-2xl font-host font-bold text-[#EAEFEA] leading-tight mb-4">16 Друзей Оушэна</h3>
+                <p class="text-sm md:text-base text-[#A8B0A9] mb-6 flex-grow">Курс по придворным арканам Таро, исследование психологических типов каждой карты двора с точки зрения соционической теории</p>
+                <div class="mt-auto flex items-center justify-between gap-4">
+                    <div class="flex-shrink-0 bg-[#B4D8C4] text-black px-8 py-2.5 rounded-full text-xs font-black uppercase tracking-widest hover:bg-white hover:scale-105 transition-all duration-300 shadow-lg shadow-[#B4D8C4]/10 flex items-center justify-center h-[42px]">
+                        Подробнее
+                    </div>
+                    <div class="flex flex-col items-end justify-center gap-0.5 h-[42px]">
+                        <span class="font-mono text-[10px] uppercase text-[#7D857E] leading-tight">Живой поток!</span>
+                        <span class="font-mono text-[10px] uppercase text-[#7D857E] leading-tight">28 816.-</span>
+                    </div>
+                </div>
+            </div>
+        </a>
+
         <!-- Course 6 -->
         <a href="shadows" id="course-6" class="course-card flex flex-col group/card overflow-hidden bg-white/5 rounded-2xl border border-transparent hover:bg-white/10 transition-all duration-500">
             <div class="relative w-full aspect-square overflow-hidden flex-shrink-0">
